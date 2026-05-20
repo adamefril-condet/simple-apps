@@ -7,13 +7,13 @@ services:
     links:
       - db
     ports:
-      -"3000"
+      - "3000"
     environment:
-      -DB_NAME=training
-      -DB_USER=peserta
-      -DB_PASSWORD=password
-      -DB_HOST=db
-      -APP_PORT=3000
+      - DB_NAME=training
+      - DB_USER=peserta
+      - DB_PASSWORD=password
+      - DB_HOST=db
+      - APP_PORT=3000
     volumes:
       - app-data:/app/public/images
 
