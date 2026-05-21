@@ -1,0 +1,42 @@
+pipeline {
+    agent {label 'devops1-adam'}
+    tools {nodejs "nodejs 18.16.0"}
+
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/IDN-Training/simple-apps.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '''cd apps
+                npm install'''
+            }
+        }
+        stage('Testing') {
+            steps {
+                sh '''cd apps
+                npm test
+                npm run test:coverage'''
+            }
+        }
+        stage('Code Review') {
+            steps {
+                sh '''cd apps
+                sonar \
+                -Dsonar.host.url=http://172.23.7.212:9000 \
+                -Dsonar.token=sqp_29cea499463d7978982d07be0975ea3d1f711a6e \
+                -Dsonar.projectKey=simple-apps''' 
+            }
+        }
+        stage('Deploy compose') {
+            steps {
+                sh '''
+                docker compose build
+                docker compose up -d
+                '''
+            }
+        }
+    }
+}
